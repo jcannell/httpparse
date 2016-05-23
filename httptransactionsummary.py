@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 """
 parse-httpheaders.py is intended to take a .pcap and output a .TSV for opening in Excel
 
