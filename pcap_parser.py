@@ -6,10 +6,11 @@ This script uses the pcapy and impacket libraries.
 
 https://github.com/CoreSecurity/pcapy
 https://github.com/CoreSecurity/impacket
-
-Author:      Harold Ogden (haroldogden@gmail.com)
-Contributor: Joshua Cannell
 """
+
+__AUTHOR__       = "Harold Ogden"
+__CONTRIBUTORS__ = ["Joshua Cannell"]
+__VERSION__      = "0.1"
 
 import argparse
 import re
@@ -31,7 +32,7 @@ except ImportError as e:
     print(("ERROR: Missing dependency: {0}".format(e)))
     sys.exit(ERROR_MISSING_DEPENDENCY)
 
-def main():
+def pcap_parser_main():
     root = Tkinter.Tk()
     root.withdraw()
     try:
@@ -259,9 +260,29 @@ def main():
     print(str("Script execution time in seconds: " + str(time_taken.seconds)))
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(description="Pcap Parser v{0}".format(__VERSION__),
+                                     add_help=False,
+                                     formatter_class=argparse.RawDescriptionHelpFormatter,
+                                     epilog="""
+usage examples:
+./pcap_parser.py -v
+./pcap_parser.py -p my_pcap.pcap -o output.tsv
+./pcap_parser.py -f dns -p my_pcap.pcap -o output.tsv
+                                     """)
+
+    # filter choices
+    FILTERS = ["http"]
+
+    parser.add_argument("-p", "--pcap", nargs=1, metavar="file", help="input pcap file to parse" )
+    parser.add_argument("-o", "--output", nargs=1, help="output TSV file to create", metavar="tsv")
+    parser.add_argument("-f", "--filter", choices=FILTERS, metavar="",
+                        help="protocol filter to use, choices are {0}".format(FILTERS))
+    parser.add_argument("-v", "--version", action="version", version="v{0}".format(__VERSION__))
+    parser.add_argument("-h", "--help", action="help", help="show this message and exit")
+
+    # parse arguments
     args = parser.parse_args()
     try:
-        main()
+        pcap_parser_main()
     except:
         pass
